@@ -77,7 +77,10 @@
 
   const isLine = (el) => el.tagName === 'DIV' && !el.hasAttribute(TABLE_ATTR);
   const ownChildren = (body) => [...body.children].filter((el) => !el.hasAttribute(TABLE_ATTR));
-  const signature = (body) => ownChildren(body).map((el) => el.textContent).join('\n');
+  // innerHTML, not textContent, so an edit that only changes formatting
+  // (fett -> **fett**) rebuilds the table too. Only attributes are set on the
+  // lines themselves, so their innerHTML stays stable after processing.
+  const signature = (body) => ownChildren(body).map((el) => el.innerHTML).join('\n');
   const isSeparator = (text) => text.includes('|') && SEPARATOR.test(text);
   const isBlank = (cell) => cell.every((n) => n.nodeType === Node.TEXT_NODE && !n.textContent.trim());
 
