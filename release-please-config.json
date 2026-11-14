@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "rocketchat-markdown-tables",
+      "include-component-in-tag": false,
+      "extra-files": [
+        { "type": "generic", "path": "rocketchat-gfm-tables.user.js" }
+      ]
+    }
+  }
+}

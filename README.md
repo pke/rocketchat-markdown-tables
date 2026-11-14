@@ -14,7 +14,7 @@ becomes a real table, with column alignment, header row and the usual Rocket.Cha
 ## Install
 
 1. Install a userscript manager such as [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/).
-2. Install the script from [Greasy Fork](https://greasyfork.org/en/users/1177905-pke) or directly from [`rocketchat-gfm-tables.user.js`](https://raw.githubusercontent.com/pke/rocketchat-markdown-tables/main/rocketchat-gfm-tables.user.js).
+2. Install the script from [Greasy Fork](https://greasyfork.org/en/users/1177905-pke) or directly from [`rocketchat-gfm-tables.user.js`](https://raw.githubusercontent.com/pke/rocketchat-markdown-tables/release/rocketchat-gfm-tables.user.js).
 
 ## Which servers it runs on
 
@@ -41,6 +41,10 @@ To put the exact Markdown (including `**bold**` or `[links](…)`) on the clipbo
 - Only people who have the script installed see the tables; everyone else still sees the pipes.
 - Mentions and emoji inside cells are copies of Rocket.Chat's rendering: they look right, but clicking a mention does not open the user card.
 - As in GFM, a line with a `|` directly after the table still belongs to it. Leave an empty line to end the table.
+
+## Releasing
+
+Commits on `master` follow [Conventional Commits](https://www.conventionalcommits.org/). [release-please](https://github.com/googleapis/release-please) keeps a release pull request open that collects them; merging it bumps `@version` in the script (`fix:` → patch, `feat:` → minor), updates `CHANGELOG.md` and tags the release. The workflow then moves the `release` branch to that commit, and Greasy Fork syncs the script from there, so users only ever get released versions.
 
 ## License
 
