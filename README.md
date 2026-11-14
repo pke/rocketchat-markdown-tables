@@ -14,11 +14,11 @@ becomes a real table, with column alignment, header row and the usual Rocket.Cha
 ## Install
 
 1. Install a userscript manager such as [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/).
-2. Install the script from [Greasy Fork](https://greasyfork.org/en/users/1177905-pke) or directly from [`rocketchat-gfm-tables.user.js`](https://raw.githubusercontent.com/pke/rocketchat-markdown-tables/release/rocketchat-gfm-tables.user.js).
+2. Install the script from [Greasy Fork](https://greasyfork.org/en/scripts/605552-rocket-chat-gfm-tables) or directly from [`rocketchat-gfm-tables.user.js`](https://raw.githubusercontent.com/pke/rocketchat-markdown-tables/release/rocketchat-gfm-tables.user.js).
 
 ## Which servers it runs on
 
-Out of the box the script runs on Rocket.Chat Cloud (`*.rocket.chat`) and on self-hosted servers whose host name starts with `rocketchat.`, `rocket.`, `chat.` or `rc.`. On every matching page it first checks that the page really is a Rocket.Chat workspace (by its `rc-*` meta tags) and does nothing otherwise.
+Out of the box the script runs on Rocket.Chat Cloud (`*.rocket.chat`) and on self-hosted servers whose host name starts with `rocketchat.`, `rocket.`, `chat.` or `rc.`, on any domain (`chat.example.com`, `rocketchat.example.de`, …). Greasy Fork lists these patterns as `chat.com`, `rocket.de` and so on; userscript managers match the whole host. On every matching page it first checks that the page really is a Rocket.Chat workspace (by its `rc-*` meta tags) and does nothing otherwise.
 
 Server on another domain? Open the script's settings in your userscript manager and add your server under **User matches**, for example `https://team.example.com/*`.
 
@@ -44,7 +44,17 @@ To put the exact Markdown (including `**bold**` or `[links](…)`) on the clipbo
 
 ## Releasing
 
-Commits on `master` follow [Conventional Commits](https://www.conventionalcommits.org/). [release-please](https://github.com/googleapis/release-please) keeps a release pull request open that collects them; merging it bumps `@version` in the script (`fix:` → patch, `feat:` → minor), updates `CHANGELOG.md` and tags the release. The workflow then moves the `release` branch to that commit, and Greasy Fork syncs the script from there, so users only ever get released versions.
+Change the script, commit with a [Conventional Commits](https://www.conventionalcommits.org/) message and push to `master`. The `release` workflow then raises `@version` from the commits in that push that touch the script:
+
+| Commit | Version |
+|---|---|
+| `feat!:`, `fix!:` or a `BREAKING CHANGE:` footer | major |
+| `feat:` | minor |
+| anything else (`fix:`, `refactor:`, …) | patch |
+
+It commits the new version to `master` as `chore(release): vX.Y.Z`, tags it and moves the `release` branch there. Greasy Fork syncs the script from the `release` branch. Pull before your next change to get the version commit.
+
+To pick a version yourself, change `@version` in your commit; the workflow then keeps it.
 
 ## License
 

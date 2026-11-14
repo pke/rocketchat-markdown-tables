@@ -3,22 +3,43 @@ name: release
 on:
   push:
     branches: [master]
+    paths: [rocketchat-gfm-tables.user.js]
 
 permissions:
   contents: write
-  pull-requests: write
+
+# One release at a time, so two quick pushes don't race for the same version.
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
-  release-please:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action@v4
-        id: release
-
-      # Greasy Fork syncs the script from the release branch, so it only
-      # ever sees released versions, never work in progress on master.
       - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
-      - name: Move the release branch to this release
-        if: ${{ steps.release.outputs.release_created }}
-        run: git push origin HEAD:refs/heads/release
+        with:
+          fetch-depth: 0
+
+      - name: Bump @version from the pushed commits
+        id: bump
+        run: node scripts/bump-version.mjs "${{ github.event.before }}" HEAD
+
+      - name: Commit the new version
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(release): v${{ steps.bump.outputs.version }} [skip ci]"
+
+      # Greasy Fork syncs the script from the release branch.
+      - name: Tag and publish to the release branch
+        env:
+          TAG: v${{ steps.bump.outputs.version }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "$TAG already exists, nothing to release"
+            exit 0
+          fi
+          git tag "$TAG"
+          git push --atomic origin HEAD:refs/heads/master +HEAD:refs/heads/release "refs/tags/$TAG"
