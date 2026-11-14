@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rocket.Chat GFM Tables
 // @namespace    https://github.com/pke
-// @version      0.6.1
+// @version      0.6.2
 // @description  Renders GitHub Flavored Markdown tables in Rocket.Chat messages and copies them back as Markdown
 // @author       Philipp Kursawe
 // @license      MIT
